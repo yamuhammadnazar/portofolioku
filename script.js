@@ -131,3 +131,57 @@ document
     link.click();
     document.body.removeChild(link);
   });
+
+  /* ==========================================================================
+   CONTACT FORM AJAX SUBMISSION (Formspree)
+   ========================================================================== */
+const contactForm = document.getElementById("contactForm");
+const formStatus = document.getElementById("formStatus");
+const submitBtn = document.getElementById("submitBtn");
+
+if (contactForm) {
+  contactForm.addEventListener("submit", async function (e) {
+    e.preventDefault(); // Mencegah reload halaman
+
+    // Ubah teks tombol menjadi loading
+    const originalBtnText = submitBtn.innerText;
+    submitBtn.innerText = "Mengirim...";
+    submitBtn.disabled = true;
+    
+    // Reset status sebelumnya
+    formStatus.className = "form-status";
+    formStatus.innerText = "";
+    formStatus.style.display = "none";
+
+    const data = new FormData(contactForm);
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: contactForm.method,
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        formStatus.innerText = "Pesan berhasil terkirim! Terima kasih telah menghubungi saya.";
+        formStatus.classList.add("success");
+        formStatus.style.display = "block";
+        contactForm.reset(); // Kosongkan form
+      } else {
+        formStatus.innerText = "Oops! Terjadi kesalahan. Silakan coba lagi.";
+        formStatus.classList.add("error");
+        formStatus.style.display = "block";
+      }
+    } catch (error) {
+      formStatus.innerText = "Koneksi terputus. Gagal mengirim pesan.";
+      formStatus.classList.add("error");
+      formStatus.style.display = "block";
+    } finally {
+      // Kembalikan tombol ke kondisi semula
+      submitBtn.innerText = originalBtnText;
+      submitBtn.disabled = false;
+    }
+  });
+}
