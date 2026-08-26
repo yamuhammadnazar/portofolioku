@@ -102,6 +102,7 @@ svg {
     background: linear-gradient(90deg, var(--gold), var(--navy));
     z-index: 500;
     transition: width .12s var(--ease-fast);
+    display: none;
 }
 
 /* ==========================================================================
