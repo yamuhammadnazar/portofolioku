@@ -898,6 +898,21 @@ footer {
         min-height: auto;
     }
 
+    /* .card-pad di atas mereset padding-left lewat shorthand, jadi jarak
+     garis-ke-teks pada timeline perlu ditegaskan ulang di sini supaya
+     tetap lega dan tidak menumpuk ke teks di layar sempit. */
+    .t-card {
+        padding-left: 48px;
+    }
+
+    .t-card::before {
+        left: 26px;
+    }
+
+    .t-card::after {
+        left: 21px;
+    }
+
     /* Di layar sempit, sidebar menutupi konten (overlay) alih-alih mendorongnya
      — mencegah konten menjadi terlalu sempit di perangkat kecil. */
     body.sidebar-open .page-shell {
