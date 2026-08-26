@@ -1,335 +1,274 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ya' Muhammad Nazar — Software Engineer & Web Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ya' Muhammad Nazar — Informatics Engineer &amp; Web Developer</title>
+<meta name="description" content="Portofolio profesional Ya' Muhammad Nazar — Informatics Engineering & Web Developer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#0b0f19] text-slate-300 antialiased selection:bg-teal-500 selection:text-slate-950 font-sans leading-relaxed">
+<body>
 
-    <div id="scrollProgress" class="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-400 z-50 transition-all duration-150" style="width: 0%;"></div>
+  <!-- Progress bar bacaan -->
+  <div class="progress-bar" id="progressBar"></div>
 
-    <button id="sidebarToggle" class="fixed top-6 left-6 z-50 p-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-teal-400 hover:text-white hover:border-teal-500/50 shadow-2xl backdrop-blur-md focus:outline-none transition-all duration-200 flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <span class="text-xs font-mono uppercase tracking-wider hidden sm:inline font-semibold">Menu</span>
-    </button>
+  <!-- Tab pembuka sidebar -->
+  <button class="sidebar-tab" id="sidebarToggle" aria-label="Buka navigasi" aria-expanded="false" aria-controls="sidebar">
+    <span class="tab-line"></span>
+    <span class="tab-text">Menu</span>
+  </button>
 
-    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-30 hidden transition-opacity"></div>
+  <div class="overlay" id="overlay"></div>
 
-    <div class="fixed top-0 left-1/4 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-[140px] pointer-events-none"></div>
-    <div class="fixed bottom-0 right-10 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none"></div>
-
-    <div class="max-w-5xl mx-auto min-h-screen px-6 md:px-12 xl:px-20 py-16">
-        
-        <aside id="sidebar" class="fixed top-0 bottom-0 left-0 z-40 w-80 bg-[#0d1322] border-r border-slate-800 p-8 flex flex-col justify-between shadow-2xl -translate-x-full transition-transform duration-300 ease-in-out">
-            <div>
-                <div class="flex items-center justify-between mb-8">
-                    <span class="text-xs font-mono uppercase tracking-widest text-slate-500 font-semibold">Navigasi Utama</span>
-                    <button id="sidebarClose" class="text-slate-400 hover:text-white p-1 focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-teal-500/10 text-teal-400 text-xs font-mono font-medium tracking-wide uppercase mb-6 border border-teal-500/20 shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-                    Ready for Work
-                </div>
-
-                <h1 class="text-2xl font-bold tracking-tight text-white mb-1">
-                    Ya' Muhammad Nazar
-                </h1>
-                <h2 class="text-xs font-mono text-teal-400 mb-8">
-                    Informatics Engineer & Full-Stack Dev
-                </h2>
-
-                <nav class="flex flex-col space-y-2.5" aria-label="Sidebar navigation">
-                    <a href="#about" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">01.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Tentang Saya</span>
-                    </a>
-                    <a href="#education" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">02.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Pendidikan</span>
-                    </a>
-                    <a href="#experience" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">03.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Pengalaman</span>
-                    </a>
-                    <a href="#organization" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">04.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Organisasi</span>
-                    </a>
-                    <a href="#skills" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">05.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Keahlian</span>
-                    </a>
-                    <a href="#projects" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">06.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Proyek</span>
-                    </a>
-                    <a href="#contact" class="nav-link group flex items-center gap-3 py-2 text-slate-400 hover:text-white transition-colors">
-                        <span class="text-teal-400 font-mono text-xs">07.</span>
-                        <span class="text-xs font-mono uppercase tracking-wider group-hover:translate-x-1.5 transition-transform">Kontak</span>
-                    </a>
-                </nav>
-            </div>
-
-            <div class="flex items-center gap-2 text-slate-400 pt-6 border-t border-slate-800/80">
-                <a href="https://github.com" target="_blank" class="hover:text-teal-400 transition-colors px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs font-mono">GitHub</a>
-                <a href="https://instagram.com" target="_blank" class="hover:text-teal-400 transition-colors px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs font-mono">Instagram</a>
-                <a href="mailto:emailmu@example.com" class="hover:text-teal-400 transition-colors px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs font-mono">Email</a>
-            </div>
-        </aside>
-
-        <main class="max-w-3xl mx-auto space-y-20 pt-8">
-            
-            <section class="space-y-6 text-left py-12">
-                <div class="inline-flex items-center gap-2.5 py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 text-xs font-mono font-medium tracking-wide uppercase border border-teal-500/20">
-                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-                    Informatics Engineering Graduate
-                </div>
-                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                    Ya' Muhammad Nazar
-                </h1>
-                <p class="text-lg text-slate-400 max-w-2xl leading-relaxed font-normal">
-                    Berpengalaman merancang dan mengintegrasikan aplikasi web fungsional menggunakan PHP, Laravel, React, serta membangun antarmuka pengguna yang terstruktur dan bersih.
-                </p>
-                <div class="flex flex-wrap gap-4 pt-2">
-                    <a href="#projects" class="px-6 py-3.5 rounded-xl bg-teal-500 text-slate-950 font-bold hover:bg-teal-400 transition-all text-sm shadow-lg shadow-teal-500/20">Lihat Proyek</a>
-                    <a href="#contact" class="px-6 py-3.5 rounded-xl bg-slate-900 text-slate-200 font-bold hover:bg-slate-800 transition-all text-sm border border-slate-800">Hubungi Saya</a>
-                </div>
-            </section>
-
-            <section id="about" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">01. Tentang Saya</h2>
-                <div class="p-8 rounded-3xl bg-slate-900/40 border border-slate-800/80 space-y-4 text-slate-300 leading-relaxed text-base">
-                    <p>
-                        Saya lulusan <strong class="text-white font-semibold">Teknik Informatika</strong> dari Universitas Muhammadiyah Pontianak dengan IPK <span class="text-teal-400 font-mono font-bold">3.75</span>. Memiliki passion yang kuat pada rekayasa perangkat lunak, sistem basis data, dan pengembangan web full-stack.
-                    </p>
-                    <p>
-                        Terbiasa mengelola alur kerja pembuatan sistem dari fase analisis kebutuhan hingga deployment. Pengalaman magang di instansi pemerintah serta kepemimpinan di organisasi kesiswaan dan kemahasiswaan telah membentuk etos kerja profesional, pemecahan masalah yang efisien, serta koordinasi tim yang solid.
-                    </p>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/80 text-center">
-                        <div class="text-2xl font-bold font-mono text-teal-400">3.75</div>
-                        <div class="text-[11px] text-slate-400 mt-1 font-mono">IPK Lulusan</div>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/80 text-center">
-                        <div class="text-2xl font-bold font-mono text-teal-400">1+ Thn</div>
-                        <div class="text-[11px] text-slate-400 mt-1 font-mono">Pengalaman Kerja</div>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/80 text-center">
-                        <div class="text-2xl font-bold font-mono text-teal-400">5+</div>
-                        <div class="text-[11px] text-slate-400 mt-1 font-mono">Proyek Web</div>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/80 text-center">
-                        <div class="text-2xl font-bold font-mono text-teal-400">4+</div>
-                        <div class="text-[11px] text-slate-400 mt-1 font-mono">Peran Organisasi</div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="education" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">02. Pendidikan</h2>
-                <div class="space-y-4">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="text-lg font-bold text-white">Teknik Informatika (S1)</h3>
-                                <p class="text-xs text-teal-400 font-mono mt-0.5">Universitas Muhammadiyah Pontianak</p>
-                            </div>
-                            <span class="px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-mono font-bold">IPK: 3.75</span>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed mt-3">Mendalami rekayasa perangkat lunak, algoritma pemrograman, perancangan Sistem Pendukung Keputusan (SPK), arsitektur basis data, serta pemrosesan web modern.</p>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all">
-                        <div class="mb-2">
-                            <h3 class="text-lg font-bold text-white">Ilmu Pengetahuan Alam (IPA)</h3>
-                            <p class="text-xs text-teal-400 font-mono mt-0.5">SMA Negeri 1 Ngabang</p>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">Membangun dasar logika matematika, metodologi ilmiah, dan pemecahan masalah secara terstruktur.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="experience" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">03. Pengalaman Pekerjaan & Magang</h2>
-                <div class="space-y-4">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all space-y-2">
-                        <div class="flex flex-wrap justify-between items-start gap-2">
-                            <div>
-                                <h3 class="font-bold text-white text-base">Pengelola Fasilitas Umum</h3>
-                                <p class="text-xs text-slate-400 font-mono">Rutan Kelas IIA Pontianak &bull; Kemenimipas</p>
-                            </div>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Nov 2025 - Sekarang</span>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">Mengelola, menata, dan memastikan kelancaran operasional fasilitas umum lingkungan Rutan untuk mendukung kenyamanan serta keamanan kerja.</p>
-                    </div>
-
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all space-y-2">
-                        <div class="flex flex-wrap justify-between items-start gap-2">
-                            <div>
-                                <h3 class="font-bold text-white text-base">Social Media Manager (Freelance)</h3>
-                                <p class="text-xs text-slate-400 font-mono">404TechNotFound &bull; Personal Project</p>
-                            </div>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Jul 2025 - Jun 2026</span>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">Mengembangkan strategi konten edukasi IT, memproduksi aset materi visual interaktif via Canva, dan menganalisis performa pertumbuhan audiens secara berkala.</p>
-                    </div>
-
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all space-y-2">
-                        <div class="flex flex-wrap justify-between items-start gap-2">
-                            <div>
-                                <h3 class="font-bold text-white text-base">Social Media Designer Intern</h3>
-                                <p class="text-xs text-slate-400 font-mono">Diskominfo Kabupaten Kubu Raya</p>
-                            </div>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Mar 2025 - Apr 2025</span>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">Mendesain konten publikasi informasi daerah untuk Instagram serta membantu proses dokumentasi dan liputan program berita publik "Kubu Raya Sepekan".</p>
-                    </div>
-
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all space-y-2">
-                        <div class="flex flex-wrap justify-between items-start gap-2">
-                            <div>
-                                <h3 class="font-bold text-white text-base">Lecturer Project Assistant & Specialist</h3>
-                                <p class="text-xs text-slate-400 font-mono">Universitas Muhammadiyah Pontianak</p>
-                            </div>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Jun 2024 - Feb 2025</span>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">Mengurus operasional administrasi laboratorium, mengatur jadwal kursus C++, serta mengelola saluran informasi publik via Instagram dan WhatsApp Business.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="organization" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">04. Riwayat Organisasi</h2>
-                <div class="flex gap-3 mb-4">
-                    <button id="btnKuliah" onclick="switchOrgTab('kuliah')" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-teal-500 text-slate-950 shadow-md">Perguruan Tinggi</button>
-                    <button id="btnSma" onclick="switchOrgTab('sma')" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">SMA</button>
-                </div>
-
-                <div id="orgKuliah" class="space-y-4">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-2">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-semibold text-white">Himpunan Mahasiswa Informatika (HMIF)</h3>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Sekretaris</span>
-                        </div>
-                        <p class="text-xs text-slate-500 font-mono">Universitas Muhammadiyah Pontianak (2023 - 2024)</p>
-                        <p class="text-sm text-slate-400 leading-relaxed">Mengelola tata kelola persuratan, arsip digital, dan mengoordinasikan jadwal agenda program kerja organisasi.</p>
-                    </div>
-
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-2">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-semibold text-white">Kuliah Kerja Usaha / Nyata (KKN/KKU)</h3>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Sekretaris Tim</span>
-                        </div>
-                        <p class="text-xs text-slate-500 font-mono">Desa Mendalok, Sungai Kunyit (2024)</p>
-                        <p class="text-sm text-slate-400 leading-relaxed">Menyusun proposal pengabdian, mengelola laporan harian, serta menjadi moderator dalam seminar hasil program desa.</p>
-                    </div>
-                </div>
-
-                <div id="orgSma" class="space-y-4 hidden">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-2">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-semibold text-white">Palang Merah Remaja (PMR)</h3>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Ketua Unit & Diklat</span>
-                        </div>
-                        <p class="text-xs text-slate-500 font-mono">SMA Negeri 1 Ngabang</p>
-                        <p class="text-sm text-slate-400 leading-relaxed">Mengepalai divisi pelatihan anggota baru serta mengatur kesiapsiagaan tim dalam kegiatan pertolongan pertama.</p>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-2">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-semibold text-white">Organisasi Siswa Intra Sekolah (OSIS)</h3>
-                            <span class="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Sekretaris</span>
-                        </div>
-                        <p class="text-xs text-slate-500 font-mono">SMA Negeri 1 Ngabang</p>
-                        <p class="text-sm text-slate-400 leading-relaxed">Mencatat dokumentasi rapat, mengurus perizinan acara, dan memfasilitasi administrasi kegiatan kesiswaan.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="skills" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">05. Keahlian & Teknologi</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-4">
-                        <h3 class="text-xs font-mono uppercase tracking-wider text-teal-400 font-bold">Hard Skills</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">PHP Native</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Laravel</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">React & Vite</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Tailwind CSS</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Bootstrap</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">JavaScript (ES6+)</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">MySQL Database</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Git & GitHub</span>
-                        </div>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-4">
-                        <h3 class="text-xs font-mono uppercase tracking-wider text-teal-400 font-bold">Soft Skills</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Komunikasi Efektif</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Kerja Sama Tim</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Problem Solving</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Manajemen Waktu</span>
-                            <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-300 text-xs font-mono border border-slate-800">Administrasi & Arsip</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="projects" class="space-y-6">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">06. Proyek Pilihan</h2>
-                <div class="space-y-4">
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all">
-                        <h3 class="text-lg font-bold text-white mb-2">Sistem Pendukung Keputusan (SPK)</h3>
-                        <p class="text-sm text-slate-400 leading-relaxed mb-4">Aplikasi web pembuat keputusan berbasis metode analitis (AHP & SAW) untuk pengolahan data kriteria, pembobotan otomatis, dan kalkulasi rangking secara presisi.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">PHP</span>
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">Laravel</span>
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">MySQL</span>
-                        </div>
-                    </div>
-
-                    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-teal-500/50 transition-all">
-                        <h3 class="text-lg font-bold text-white mb-2">Web Portofolio Modern</h3>
-                        <p class="text-sm text-slate-400 leading-relaxed mb-4">Aplikasi portofolio interaktif berperforma tinggi dengan fitur drawer navigation, indikator progress, dan susunan layout yang bersih.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">HTML5</span>
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">Tailwind CSS</span>
-                            <span class="px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 text-xs font-mono border border-teal-500/20">JavaScript</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="space-y-6 pb-12">
-                <h2 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">07. Kontak</h2>
-                <div class="p-8 rounded-3xl bg-slate-900/40 border border-slate-800/80 space-y-4">
-                    <h3 class="text-2xl font-bold text-white">Mari Berdiskusi</h3>
-                    <p class="text-slate-400 leading-relaxed text-sm">
-                        Tertarik bekerja sama, memiliki tawaran pekerjaan, atau sekadar ingin berdiskusi mengenai proyek web? Silakan hubungi saya melalui email di bawah ini.
-                    </p>
-                    <a href="mailto:emailmu@example.com" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-teal-500 text-slate-950 font-bold hover:bg-teal-400 transition-colors text-sm shadow-lg shadow-teal-500/20">
-                        Kirim Pesan Email
-                    </a>
-                </div>
-            </section>
-
-            <footer class="text-xs text-slate-500 pt-8 border-t border-slate-800/80 text-center sm:text-left">
-                <p>&copy; 2026 Ya' Muhammad Nazar. Built with Tailwind CSS, Vanilla JS & Deployed on Vercel.</p>
-            </footer>
-
-        </main>
-
+  <!-- Sidebar navigasi -->
+  <nav class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="sb-head">
+      <span class="sb-name">Ya' Muhammad Nazar</span>
+      <span class="sb-role">Informatics Engineer</span>
     </div>
+    <ul class="sb-nav">
+      <li><a href="#hero" data-nav><span>Beranda</span><i>00</i></a></li>
+      <li><a href="#tentang" data-nav><span>Tentang Saya</span><i>01</i></a></li>
+      <li><a href="#pendidikan" data-nav><span>Riwayat Pendidikan</span><i>02</i></a></li>
+      <li><a href="#pekerjaan" data-nav><span>Pekerjaan &amp; Magang</span><i>03</i></a></li>
+      <li><a href="#organisasi" data-nav><span>Riwayat Organisasi</span><i>04</i></a></li>
+      <li><a href="#keahlian" data-nav><span>Keahlian &amp; Teknologi</span><i>05</i></a></li>
+      <li><a href="#proyek" data-nav><span>Proyek Pilihan</span><i>06</i></a></li>
+    </ul>
+    <div class="sb-foot">
+      <span class="sb-dot"></span> Terbuka untuk peluang baru
+      <br>Kalimantan Barat, Indonesia
+    </div>
+  </nav>
 
-    <script src="script.js"></script>
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <p class="eyebrow">Portofolio — Teknik Informatika</p>
+      <h1 class="hero-name">Ya' Muhammad<br>Nazar</h1>
+      <p class="hero-role">Informatics Engineering &amp; Web Developer</p>
+      <hr class="rule">
+      <div class="meta-row">
+        <span><em>Lokasi</em> Kalimantan Barat</span>
+        <span><em>IPK</em> 3.75 / 4.00</span>
+        <span><em>Fokus</em> Web Development &amp; Sistem Pendukung Keputusan</span>
+      </div>
+    </section>
+
+    <!-- 01 TENTANG -->
+    <section id="tentang">
+      <p class="eyebrow">01 — Profil</p>
+      <h2 class="title">Tentang Saya</h2>
+      <p class="lead">
+        Saya memiliki latar belakang pendidikan Teknik Informatika dengan ketertarikan mendalam pada teknologi informasi, pengembangan perangkat lunak, dan pemecahan masalah. Terbiasa merancang dan mengembangkan sistem dari tahap perencanaan hingga deployment. Pengalaman organisasi dan magang turut mengasah kemampuan komunikasi, kerja sama tim, koordinasi, serta tanggung jawab profesional.
+      </p>
+    </section>
+
+    <!-- 02 PENDIDIKAN -->
+    <section id="pendidikan">
+      <p class="eyebrow">02 — Akademik</p>
+      <h2 class="title">Riwayat Pendidikan</h2>
+
+      <div class="timeline">
+        <article class="t-item is-current">
+          <div class="t-date">Sedang ditempuh</div>
+          <div class="t-body">
+            <h3>Strata 1 (S1) — Teknik Informatika</h3>
+            <p class="t-org">Universitas Muhammadiyah Pontianak &middot; IPK 3.75 / 4.00</p>
+            <p class="t-desc">Fokus mempelajari pengembangan perangkat lunak, algoritma, pemrograman web, manajemen basis data, serta perancangan Sistem Pendukung Keputusan (SPK).</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Lulus</div>
+          <div class="t-body">
+            <h3>SMA — Ilmu Pengetahuan Alam (IPA)</h3>
+            <p class="t-org">SMA Negeri 1 Ngabang</p>
+            <p class="t-desc">Menempuh pendidikan dengan fokus peminatan Ilmu Pengetahuan Alam, membangun dasar logika, analisis sains, dan pemecahan masalah yang kuat.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 03 PEKERJAAN -->
+    <section id="pekerjaan">
+      <p class="eyebrow">03 — Pengalaman</p>
+      <h2 class="title">Pekerjaan &amp; Magang</h2>
+
+      <div class="timeline">
+        <article class="t-item is-current">
+          <div class="t-date">Nov 2025 — Saat ini</div>
+          <div class="t-body">
+            <h3>Pengelola Fasilitas Umum</h3>
+            <p class="t-org">Magang &middot; Rutan Kelas IIA Pontianak — Kementerian Imigrasi &amp; Pemasyarakatan, Pontianak Tenggara</p>
+            <p class="t-desc">Mengelola dan mengoptimalkan penataan fasilitas umum guna mendukung kenyamanan dan ketertiban operasional fasilitas pemasyarakatan.</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Jul 2025 — Jun 2026</div>
+          <div class="t-body">
+            <h3>Social Media Manager <span class="t-tag">Proyek Pribadi</span></h3>
+            <p class="t-org">Freelance &middot; 404TechNotFound — Kalimantan Barat</p>
+            <p class="t-desc">Mengelola akun Instagram edukasi IT, merancang materi visual, meningkatkan engagement organik, dan menganalisis performa konten. Alat: Meta Business Suite &amp; Canva.</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Mar 2025 — Apr 2025</div>
+          <div class="t-body">
+            <h3>Social Media Designer Intern</h3>
+            <p class="t-org">Magang &middot; Diskominfo Kubu Raya</p>
+            <p class="t-desc">Mendesain feed/story Instagram informasi publik dan membantu peliputan kegiatan mingguan "Kubu Raya Sepekan".</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Jun 2024 — Feb 2025</div>
+          <div class="t-body">
+            <h3>Lecturer Project Assistant &amp; Social Media Specialist</h3>
+            <p class="t-org">Paruh Waktu &middot; Universitas Muhammadiyah Pontianak — @kursus.labumptk</p>
+            <p class="t-desc">Menyiapkan absensi &amp; jadwal lab/kursus C++, serta mengelola konten Instagram &amp; WhatsApp Business.</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Jul 2020 — Mar 2021</div>
+          <div class="t-body">
+            <h3>Shopee Seller &amp; Social Media Admin</h3>
+            <p class="t-org">Pekerja Lepas / Purnawaktu — Ngabang</p>
+            <p class="t-desc">Mengelola toko online Shopee, katalog produk, pelayanan pelanggan, dan media sosial Markas Percetakan.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 04 ORGANISASI -->
+    <section id="organisasi">
+      <p class="eyebrow">04 — Kepemimpinan</p>
+      <h2 class="title">Riwayat Organisasi</h2>
+
+      <h3 class="sub-title">Perguruan Tinggi</h3>
+      <div class="timeline">
+        <article class="t-item">
+          <div class="t-date">Okt 2023 — Sep 2024</div>
+          <div class="t-body">
+            <h3>Sekretaris Himpunan</h3>
+            <p class="t-org">Himpunan Mahasiswa Informatika (HMIF)</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Jun 2024 — Agu 2024</div>
+          <div class="t-body">
+            <h3>Sekretaris — Community Service Program (KKN/KKU)</h3>
+            <p class="t-org">Desa Mendalok, Sungai Kunyit</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">Agustus 2024</div>
+          <div class="t-body">
+            <h3>Sekretaris — Panitia 17 Agustus</h3>
+            <p class="t-org">Desa Mendalok</p>
+          </div>
+        </article>
+      </div>
+
+      <h3 class="sub-title">Sekolah Menengah Atas (SMA)</h3>
+      <div class="timeline">
+        <article class="t-item">
+          <div class="t-date">SMAN 1 Ngabang</div>
+          <div class="t-body">
+            <h3>Ketua Unit Umum &amp; Ketua Diklat</h3>
+            <p class="t-org">Palang Merah Remaja (PMR)</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">SMAN 1 Ngabang</div>
+          <div class="t-body">
+            <h3>Sekretaris</h3>
+            <p class="t-org">Organisasi Siswa Intra Sekolah (OSIS)</p>
+          </div>
+        </article>
+        <article class="t-item">
+          <div class="t-date">SMAN 1 Ngabang</div>
+          <div class="t-body">
+            <h3>Bendahara</h3>
+            <p class="t-org">Rohani Islam (Rohis)</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 05 KEAHLIAN -->
+    <section id="keahlian">
+      <p class="eyebrow">05 — Kapabilitas</p>
+      <h2 class="title">Keahlian &amp; Teknologi</h2>
+
+      <div class="skills-grid">
+        <div class="skills-col">
+          <h3 class="sub-title">Hard Skills</h3>
+          <ul class="tag-list">
+            <li>PHP Native</li>
+            <li>Laravel</li>
+            <li>React &amp; Vite</li>
+            <li>Tailwind CSS</li>
+            <li>Bootstrap</li>
+            <li>JavaScript (ES6+)</li>
+            <li>MySQL / Database</li>
+            <li>Figma UI/UX</li>
+            <li>Canva Design</li>
+            <li>Git &amp; GitHub</li>
+            <li>Meta Business Suite</li>
+            <li>Instagram Ads</li>
+          </ul>
+        </div>
+        <div class="skills-col">
+          <h3 class="sub-title">Soft Skills</h3>
+          <ul class="tag-list">
+            <li>Komunikasi Efektif</li>
+            <li>Kerja Sama Tim</li>
+            <li>Koordinasi &amp; Organisasi</li>
+            <li>Problem Solving</li>
+            <li>Manajemen Waktu</li>
+            <li>Tanggung Jawab</li>
+            <li>Social Media Marketing</li>
+            <li>Microsoft Word</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 PROYEK -->
+    <section id="proyek">
+      <p class="eyebrow">06 — Portofolio</p>
+      <h2 class="title">Proyek Pilihan</h2>
+
+      <div class="project-list">
+        <article class="project">
+          <span class="project-num">01</span>
+          <div class="project-body">
+            <h3>Sistem Pendukung Keputusan</h3>
+            <p>Aplikasi web untuk manajemen dan perangkingan data menggunakan metode analitik, seperti AHP/SAW.</p>
+            <div class="project-tags"><span>PHP</span><span>Laravel</span><span>Bootstrap</span></div>
+          </div>
+        </article>
+        <article class="project">
+          <span class="project-num">02</span>
+          <div class="project-body">
+            <h3>Web Portofolio Modern</h3>
+            <p>Platform web interaktif yang menampilkan profil, keahlian, dan riwayat proyek secara dinamis.</p>
+            <div class="project-tags"><span>React</span><span>Tailwind CSS</span><span>Vite</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Ya' Muhammad Nazar</p>
+      <a href="#hero" class="back-top">Kembali ke atas ↑</a>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

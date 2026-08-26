@@ -1,74 +1,76 @@
-window.addEventListener("scroll", () => {
-  const totalScroll =
-    document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
-  const currentScroll = window.scrollY;
-  const scrollProgress = document.getElementById("scrollProgress");
-
-  if (scrollProgress) {
-    const progress = (currentScroll / totalScroll) * 100;
-    scrollProgress.style.width = progress + "%";
-  }
-});
-
-const sidebarToggle = document.getElementById("sidebarToggle");
-const sidebarClose = document.getElementById("sidebarClose");
+// ==========================================================================
+// SIDEBAR TOGGLE
+// ==========================================================================
+const body = document.body;
+const toggle = document.getElementById("sidebarToggle");
 const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
+const overlay = document.getElementById("overlay");
+const navLinks = document.querySelectorAll("[data-nav]");
 
-function toggleSidebar() {
-  if (sidebar) {
-    sidebar.classList.toggle("-translate-x-full");
-  }
-  if (sidebarOverlay) {
-    sidebarOverlay.classList.toggle("hidden");
-  }
+function openSidebar() {
+  body.classList.add("sidebar-open");
+  toggle.setAttribute("aria-expanded", "true");
+  toggle.setAttribute("aria-label", "Tutup navigasi");
+  sidebar.setAttribute("aria-hidden", "false");
 }
 
-if (sidebarToggle) {
-  sidebarToggle.addEventListener("click", toggleSidebar);
+function closeSidebar() {
+  body.classList.remove("sidebar-open");
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-label", "Buka navigasi");
+  sidebar.setAttribute("aria-hidden", "true");
 }
 
-if (sidebarClose) {
-  sidebarClose.addEventListener("click", toggleSidebar);
-}
-
-if (sidebarOverlay) {
-  sidebarOverlay.addEventListener("click", toggleSidebar);
-}
-
-const navLinks = document.querySelectorAll(".nav-link");
-navLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    if (sidebar && !sidebar.classList.contains("-translate-x-full")) {
-      toggleSidebar();
-    }
-  });
+toggle.addEventListener("click", () => {
+  body.classList.contains("sidebar-open") ? closeSidebar() : openSidebar();
 });
 
-function switchOrgTab(tab) {
-  const btnKuliah = document.getElementById("btnKuliah");
-  const btnSma = document.getElementById("btnSma");
-  const orgKuliah = document.getElementById("orgKuliah");
-  const orgSma = document.getElementById("orgSma");
+overlay.addEventListener("click", closeSidebar);
 
-  if (!btnKuliah || !btnSma || !orgKuliah || !orgSma) return;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeSidebar();
+});
 
-  if (tab === "kuliah") {
-    btnKuliah.className =
-      "px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-teal-500 text-slate-950 shadow-md";
-    btnSma.className =
-      "px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
+navLinks.forEach((link) => {
+  link.addEventListener("click", closeSidebar);
+});
 
-    orgKuliah.classList.remove("hidden");
-    orgSma.classList.add("hidden");
-  } else {
-    btnSma.className =
-      "px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-teal-500 text-slate-950 shadow-md";
-    btnKuliah.className =
-      "px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
+// ==========================================================================
+// SCROLL-SPY — menyorot menu sesuai section aktif
+// ==========================================================================
+const sections = document.querySelectorAll("main section[id]");
+const linkMap = {};
+navLinks.forEach((l) => {
+  linkMap[l.getAttribute("href").slice(1)] = l;
+});
 
-    orgSma.classList.remove("hidden");
-    orgKuliah.classList.add("hidden");
-  }
+const spyObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        navLinks.forEach((l) => l.classList.remove("active"));
+        const link = linkMap[entry.target.id];
+        if (link) link.classList.add("active");
+      }
+    });
+  },
+  { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+);
+
+sections.forEach((s) => spyObserver.observe(s));
+
+// ==========================================================================
+// PROGRESS BAR — indikator kemajuan membaca
+// ==========================================================================
+const progressBar = document.getElementById("progressBar");
+
+function updateProgressBar() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = percent + "%";
 }
+
+window.addEventListener("scroll", updateProgressBar, { passive: true });
+window.addEventListener("resize", updateProgressBar);
+updateProgressBar();
