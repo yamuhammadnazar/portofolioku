@@ -2,23 +2,41 @@
    TOKENS
    ========================================================================== */
 :root {
-    --bg: #FBFBF9;
-    --bg-alt: #F3F3F0;
-    --ink: #16181C;
-    --ink-soft: #565A62;
-    --ink-faint: #9A9DA5;
-    --line: #E1E1DC;
-    --line-strong: #C9C9C2;
-    --navy: #24344C;
-    --gold: #A9862F;
+    --bg: #F4F5F3;
+    --bg-band: #ECEEEA;
+    --surface: #FFFFFF;
+    --ink: #14171B;
+    --ink-soft: #4A4E56;
+    --ink-faint: #888C94;
+    --line: #E1E3DE;
+    --line-strong: #D2D4CD;
+
+    --navy: #1F3350;
+    --navy-soft: #1f335012;
+    --gold: #B08A3E;
+    --gold-soft: #b08a3e17;
+
+    --radius-lg: 14px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+
+    --shadow-sm: 0 1px 2px rgba(20, 23, 27, .04), 0 2px 8px -4px rgba(20, 23, 27, .08);
+    --shadow-md: 0 4px 10px -4px rgba(20, 23, 27, .10), 0 16px 32px -16px rgba(20, 23, 27, .16);
 
     --font-display: 'Fraunces', serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    --sidebar-w: 300px;
-    --content-w: 700px;
-    --gutter: clamp(32px, 9vw, 140px);
+    --sidebar-w: 320px;
+    --page-max: 1360px;
+    --gutter: clamp(24px, 4vw, 64px);
+
+    /* Kurva & durasi transisi disatukan agar semua elemen bergerak selaras */
+    --ease: cubic-bezier(.45, 0, .18, 1);
+    --ease-fast: cubic-bezier(.4, 0, .2, 1);
+    --dur-shell: .55s;
+    --dur-fade: .4s;
+    --dur-hover: .25s;
 }
 
 * {
@@ -31,6 +49,10 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Catatan: overflow-x hanya di-set pada SATU elemen (body), bukan
+   html + body sekaligus. Men-set keduanya membuat overflow-y otomatis
+   menjadi 'auto' di dua elemen berbeda -> dua scrollbar terpisah dan
+   scroll halaman jadi macet / tidak bisa digeser sampai bawah. */
 body {
     background: var(--bg);
     color: var(--ink);
@@ -38,12 +60,13 @@ body {
     font-size: 16px;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
     * {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
         scroll-behavior: auto !important;
     }
 }
@@ -62,8 +85,9 @@ ul {
     list-style: none;
 }
 
-hr {
-    border: none;
+img,
+svg {
+    display: block;
 }
 
 /* ==========================================================================
@@ -73,27 +97,183 @@ hr {
     position: fixed;
     top: 0;
     left: 0;
-    height: 2px;
+    height: 3px;
     width: 0%;
-    background: var(--gold);
-    z-index: 400;
-    transition: width .1s linear;
+    background: linear-gradient(90deg, var(--gold), var(--navy));
+    z-index: 500;
+    transition: width .12s var(--ease-fast);
 }
 
 /* ==========================================================================
-   SIDEBAR TAB (toggle)
+   OVERLAY
    ========================================================================== */
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(15, 17, 20, .4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-shell) var(--ease);
+}
+
+body.sidebar-open .overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==========================================================================
+   SIDEBAR (fixed panel, meluncur masuk dari kiri)
+   ========================================================================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--navy);
+    color: #fff;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform var(--dur-shell) var(--ease);
+    display: flex;
+    flex-direction: column;
+    padding: 56px 40px 36px;
+}
+
+body.sidebar-open .sidebar {
+    transform: translateX(0);
+}
+
+.sb-head {
+    margin-bottom: 52px;
+}
+
+.sb-mark {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--gold);
+    border: 1px solid rgba(255, 255, 255, .2);
+    padding: 4px 9px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+}
+
+.sb-name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+
+.sb-role {
+    display: block;
+    font-size: 13px;
+    color: rgba(255, 255, 255, .55);
+    letter-spacing: .01em;
+}
+
+.sb-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sb-nav li+li {
+    margin-top: 2px;
+}
+
+.sb-nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: rgba(255, 255, 255, .68);
+    transition: background var(--dur-hover) var(--ease-fast), color var(--dur-hover) var(--ease-fast), padding-left var(--dur-hover) var(--ease-fast);
+}
+
+.sb-nav a i {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255, 255, 255, .35);
+    transition: color var(--dur-hover) var(--ease-fast);
+}
+
+.sb-nav a:hover {
+    background: rgba(255, 255, 255, .06);
+    color: #fff;
+    padding-left: 18px;
+}
+
+.sb-nav a.active {
+    background: rgba(255, 255, 255, .1);
+    color: #fff;
+    font-weight: 500;
+}
+
+.sb-nav a.active i {
+    color: var(--gold);
+}
+
+.sb-foot {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, .14);
+    font-size: 12px;
+    color: rgba(255, 255, 255, .5);
+    line-height: 1.8;
+}
+
+.sb-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-right: 7px;
+    box-shadow: 0 0 8px var(--gold);
+}
+
+/* ==========================================================================
+   PAGE SHELL
+   Membungkus tab-menu + seluruh konten sebagai satu unit yang bergerak
+   bersama saat sidebar dibuka — memakai transform agar gerakannya identik
+   dengan animasi sidebar, tidak kaku / tersendat.
+   ========================================================================== */
+.page-shell {
+    position: relative;
+    transform: translateX(0);
+    transition: transform var(--dur-shell) var(--ease);
+    will-change: transform;
+}
+
+body.sidebar-open .page-shell {
+    transform: translateX(var(--sidebar-w));
+}
+
+/* Tab ini fixed, tapi karena leluhurnya (.page-shell) memiliki transform,
+   ia otomatis mengikuti pergeseran shell — satu gerakan yang menyatu. */
 .sidebar-tab {
     position: fixed;
     top: 32px;
     left: 0;
-    z-index: 300;
+    z-index: 120;
     display: flex;
     align-items: center;
     gap: 12px;
-    background: var(--bg);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-left: none;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    box-shadow: var(--shadow-sm);
     padding: 14px 20px 14px 16px;
     cursor: pointer;
     font-family: var(--font-mono);
@@ -101,12 +281,12 @@ hr {
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    transition: padding .3s ease, left .4s cubic-bezier(.65, 0, .35, 1), border-color .25s ease, color .25s ease;
+    transition: color var(--dur-hover) var(--ease-fast), box-shadow var(--dur-hover) var(--ease-fast), border-color var(--dur-hover) var(--ease-fast);
 }
 
 .sidebar-tab:hover {
     color: var(--ink);
-    border-color: var(--line-strong);
+    box-shadow: var(--shadow-md);
 }
 
 .sidebar-tab:focus-visible {
@@ -127,9 +307,9 @@ hr {
     position: absolute;
     left: 0;
     width: 100%;
-    height: 1px;
+    height: 1.5px;
     background: var(--ink);
-    transition: transform .3s ease, top .3s ease;
+    transition: transform var(--dur-hover) var(--ease-fast), top var(--dur-hover) var(--ease-fast);
 }
 
 .tab-line::before {
@@ -138,10 +318,6 @@ hr {
 
 .tab-line::after {
     top: 9px;
-}
-
-body.sidebar-open .sidebar-tab {
-    left: var(--sidebar-w);
 }
 
 body.sidebar-open .tab-line::before {
@@ -155,153 +331,38 @@ body.sidebar-open .tab-line::after {
 }
 
 /* ==========================================================================
-   OVERLAY
-   ========================================================================== */
-.overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 150;
-    background: rgba(22, 24, 28, .35);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .35s ease;
-}
-
-body.sidebar-open .overlay {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* ==========================================================================
-   SIDEBAR
-   ========================================================================== */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: var(--sidebar-w);
-    background: var(--bg);
-    border-right: 1px solid var(--line);
-    z-index: 200;
-    transform: translateX(-100%);
-    transition: transform .4s cubic-bezier(.65, 0, .35, 1);
-    display: flex;
-    flex-direction: column;
-    padding: 64px 44px 40px;
-}
-
-body.sidebar-open .sidebar {
-    transform: translateX(0);
-}
-
-.sb-head {
-    margin-bottom: 56px;
-}
-
-.sb-name {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 6px;
-}
-
-.sb-role {
-    display: block;
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    letter-spacing: .02em;
-}
-
-.sb-nav {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.sb-nav li+li {
-    margin-top: 2px;
-}
-
-.sb-nav a {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 15px;
-    color: var(--ink-soft);
-    transition: color .2s ease, padding-left .25s ease;
-}
-
-.sb-nav a i {
-    font-style: normal;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--ink-faint);
-}
-
-.sb-nav a:hover {
-    color: var(--ink);
-    padding-left: 6px;
-}
-
-.sb-nav a:hover i {
-    color: var(--gold);
-}
-
-.sb-nav a.active {
-    color: var(--ink);
-    font-weight: 500;
-}
-
-.sb-nav a.active i {
-    color: var(--gold);
-}
-
-.sb-foot {
-    margin-top: 40px;
-    padding-top: 24px;
-    border-top: 1px solid var(--line);
-    font-size: 12px;
-    color: var(--ink-faint);
-    line-height: 1.8;
-}
-
-.sb-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--gold);
-    margin-right: 6px;
-}
-
-/* ==========================================================================
    LAYOUT
    ========================================================================== */
 main {
-    max-width: var(--content-w);
-    margin-left: var(--gutter);
-    margin-right: auto;
-    padding: 0 32px;
-    transition: margin-left .4s cubic-bezier(.65, 0, .35, 1);
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
 }
 
-/* Saat sidebar terbuka, konten bergeser ke kanan agar tidak tertutup */
-body.sidebar-open main {
-    margin-left: calc(var(--sidebar-w) + 56px);
+.section-band {
+    background: var(--bg-band);
 }
 
 section {
-    padding: 110px 0;
-    border-bottom: 1px solid var(--line);
+    padding: 96px 0;
 }
 
-section:last-of-type {
-    border-bottom: none;
+.section-band {
+    margin: 0 calc(var(--gutter) * -1);
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 56px;
+}
+
+.section-label {
+    align-self: start;
+    position: sticky;
+    top: 110px;
 }
 
 .eyebrow {
@@ -310,15 +371,15 @@ section:last-of-type {
     letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .title {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(28px, 4vw, 36px);
+    font-size: clamp(26px, 2.6vw, 32px);
     color: var(--ink);
-    margin-bottom: 36px;
+    line-height: 1.2;
 }
 
 .sub-title {
@@ -327,128 +388,284 @@ section:last-of-type {
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin: 44px 0 20px;
+    margin: 0 0 20px;
 }
 
-.sub-title:first-of-type {
-    margin-top: 0;
+.card>.sub-title {
+    margin-bottom: 22px;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 26px;
+    border-radius: var(--radius-sm);
+    transition: transform var(--dur-hover) var(--ease-fast), box-shadow var(--dur-hover) var(--ease-fast), background var(--dur-hover) var(--ease-fast), border-color var(--dur-hover) var(--ease-fast);
+}
+
+.btn-primary {
+    background: var(--navy);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-ghost {
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+}
+
+.btn-ghost:hover {
+    border-color: var(--navy);
+    transform: translateY(-2px);
+}
+
+.btn-on-dark {
+    border-color: rgba(255, 255, 255, .25);
+    color: #fff;
+}
+
+.btn-on-dark:hover {
+    border-color: #fff;
 }
 
 /* ==========================================================================
    HERO
    ========================================================================== */
 .hero {
-    min-height: 92vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 120px;
-}
-
-.hero .eyebrow {
-    margin-bottom: 26px;
+    min-height: 88vh;
+    padding-top: 150px;
+    padding-bottom: 80px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 64px;
+    align-items: center;
 }
 
 .hero-name {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(44px, 8vw, 80px);
-    line-height: 1.05;
+    font-size: clamp(42px, 5.4vw, 72px);
+    line-height: 1.04;
     color: var(--ink);
-    margin-bottom: 22px;
+    margin: 0 0 24px;
     letter-spacing: -.01em;
 }
 
 .hero-role {
-    font-size: clamp(16px, 2vw, 19px);
+    font-size: 17px;
     color: var(--ink-soft);
-    margin-bottom: 40px;
+    max-width: 480px;
+    margin-bottom: 36px;
+    line-height: 1.75;
 }
 
-.rule {
-    height: 1px;
-    background: var(--line);
-    margin-bottom: 32px;
-}
-
-.meta-row {
+.hero-cta {
     display: flex;
+    gap: 14px;
     flex-wrap: wrap;
-    gap: 28px 40px;
 }
 
-.meta-row span {
-    font-size: 14.5px;
-    color: var(--ink);
+.hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+    background-size: 16px 16px;
+    padding: 20px;
+    border-radius: var(--radius-lg);
 }
 
-.meta-row em {
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-hover) var(--ease-fast), box-shadow var(--dur-hover) var(--ease-fast);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy-soft);
+    color: var(--navy);
+}
+
+.stat-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.stat-k {
     display: block;
-    font-style: normal;
     font-family: var(--font-mono);
     font-size: 10.5px;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+}
+
+.stat-v {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.stat-v.accent {
+    color: var(--gold);
 }
 
 /* ==========================================================================
-   ABOUT
+   CARDS (dipakai ulang: about, timeline, org, skills, projects)
    ========================================================================== */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-hover) var(--ease-fast), box-shadow var(--dur-hover) var(--ease-fast), border-color var(--dur-hover) var(--ease-fast);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--line-strong);
+}
+
+.card-pad {
+    padding: 32px 36px;
+}
+
 .lead {
-    font-size: 18px;
+    font-size: 17px;
     color: var(--ink-soft);
-    max-width: 600px;
     line-height: 1.85;
+    margin-bottom: 24px;
+}
+
+.pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pill {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    background: var(--navy-soft);
+    border: 1px solid transparent;
+    padding: 8px 15px;
+    border-radius: 999px;
+    transition: transform var(--dur-hover) var(--ease-fast), background var(--dur-hover) var(--ease-fast);
+}
+
+.pill:hover {
+    transform: translateY(-2px);
+    background: var(--navy);
+    color: #fff;
+}
+
+.pill-alt {
+    color: var(--gold);
+    background: var(--gold-soft);
+}
+
+.pill-alt:hover {
+    background: var(--gold);
+    color: #fff;
+}
+
+.pill-sm {
+    font-size: 11.5px;
+    padding: 6px 12px;
 }
 
 /* ==========================================================================
-   TIMELINE
+   TIMELINE CARDS (pendidikan / pekerjaan)
    ========================================================================== */
-.timeline {
+.card-list {
     display: flex;
     flex-direction: column;
+    gap: 18px;
 }
 
-.t-item {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 24px;
-    padding: 28px 0;
-    border-top: 1px solid var(--line);
+.t-card {
     position: relative;
+    padding-left: 40px;
 }
 
-.timeline .t-item:first-child {
-    border-top: 1px solid var(--line-strong);
-}
-
-.t-item.is-current::before {
+.t-card::before {
     content: '';
     position: absolute;
-    left: -16px;
-    top: 34px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+    left: 36px;
+    top: 36px;
+    bottom: 36px;
+    width: 2px;
+    background: var(--line);
+}
+
+.t-card.is-current::before {
     background: var(--gold);
 }
 
-.t-date {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--ink-faint);
-    letter-spacing: .03em;
-    padding-top: 3px;
+.t-card::after {
+    content: '';
+    position: absolute;
+    left: 32px;
+    top: 34px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--line-strong);
 }
 
-.t-body h3 {
+.t-card.is-current::after {
+    border-color: var(--gold);
+    background: var(--gold);
+}
+
+.t-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.t-card-head h3 {
     font-family: var(--font-display);
     font-size: 19px;
     font-weight: 500;
     color: var(--ink);
-    margin-bottom: 8px;
 }
 
 .t-tag {
@@ -461,12 +678,32 @@ section:last-of-type {
     border: 1px solid var(--line);
     padding: 3px 8px;
     margin-left: 8px;
-    vertical-align: middle;
+    border-radius: var(--radius-sm);
+}
+
+.badge {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: var(--ink-soft);
+    background: var(--bg-band);
+    border: 1px solid var(--line);
+    padding: 5px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.badge-accent {
+    color: #fff;
+    background: var(--navy);
+    border-color: var(--navy);
 }
 
 .t-org {
     font-size: 13.5px;
-    color: var(--ink-soft);
+    color: var(--navy);
+    font-weight: 500;
     margin-bottom: 10px;
 }
 
@@ -474,14 +711,41 @@ section:last-of-type {
     font-size: 14.5px;
     color: var(--ink-soft);
     line-height: 1.75;
-    max-width: 480px;
+    max-width: 640px;
 }
 
-@media (max-width:640px) {
-    .t-item {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
+/* ==========================================================================
+   ORGANISASI — grid kartu
+   ========================================================================== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.card-grid:last-child {
+    margin-bottom: 0;
+}
+
+.org-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.org-card .badge {
+    align-self: flex-start;
+    margin-bottom: 4px;
+}
+
+.org-card h3 {
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.35;
 }
 
 /* ==========================================================================
@@ -490,67 +754,49 @@ section:last-of-type {
 .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0 56px;
-}
-
-@media (max-width:640px) {
-    .skills-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.tag-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.tag-list li {
-    font-size: 14.5px;
-    color: var(--ink-soft);
-    padding: 12px 0;
-    border-top: 1px solid var(--line);
-    transition: color .2s ease, padding-left .2s ease;
-}
-
-.tag-list li:last-child {
-    border-bottom: 1px solid var(--line);
-}
-
-.tag-list li:hover {
-    color: var(--ink);
-    padding-left: 6px;
+    gap: 20px;
 }
 
 /* ==========================================================================
    PROJECTS
    ========================================================================== */
-.project-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.project {
+.project-grid {
     display: grid;
-    grid-template-columns: 64px 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
-    padding: 36px 0;
-    border-top: 1px solid var(--line);
 }
 
-.project-list .project:first-child {
-    border-top: 1px solid var(--line-strong);
+.project-card {
+    overflow: hidden;
+}
+
+.project-cover {
+    height: 120px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 16px 20px;
+}
+
+.project-cover-a {
+    background: linear-gradient(135deg, var(--navy), #375277);
+}
+
+.project-cover-b {
+    background: linear-gradient(135deg, var(--gold), #8a6b2c);
 }
 
 .project-num {
     font-family: var(--font-display);
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 500;
-    color: var(--line-strong);
+    color: rgba(255, 255, 255, .55);
 }
 
 .project-body h3 {
     font-family: var(--font-display);
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 500;
     color: var(--ink);
     margin-bottom: 10px;
@@ -560,91 +806,110 @@ section:last-of-type {
     font-size: 14.5px;
     color: var(--ink-soft);
     line-height: 1.75;
-    max-width: 480px;
-    margin-bottom: 16px;
-}
-
-.project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.project-tags span {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: .04em;
-    color: var(--navy);
-    border: 1px solid var(--line);
-    padding: 5px 10px;
-}
-
-@media (max-width:640px) {
-    .project {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
+    margin-bottom: 18px;
 }
 
 /* ==========================================================================
    FOOTER
    ========================================================================== */
 footer {
-    padding: 56px 0 100px;
+    margin: 0 calc(var(--gutter) * -1) calc(var(--gutter) * -1);
+    margin-top: 40px;
+    background: var(--navy);
+    color: #fff;
+    padding: 56px var(--gutter) 40px;
+}
+
+.footer-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 24px;
+    margin-bottom: 32px;
 }
 
-footer p {
+.footer-name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.footer-role {
+    display: block;
     font-size: 13px;
-    color: var(--ink-faint);
+    color: rgba(255, 255, 255, .55);
 }
 
-.back-top {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 2px;
-    transition: color .2s ease, border-color .2s ease;
-}
-
-.back-top:hover {
-    color: var(--navy);
-    border-color: var(--navy);
+.footer-copy {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, .4);
+    border-top: 1px solid rgba(255, 255, 255, .14);
+    padding-top: 24px;
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
-@media (max-width:760px) {
+@media (max-width:1080px) {
+    .section-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
 
-    /* Di layar sempit, sidebar menutupi konten (overlay) alih-alih mendorongnya */
-    body.sidebar-open main {
-        margin-left: var(--gutter);
+    .section-label {
+        position: static;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-top: 130px;
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width:760px) {
+    :root {
+        --gutter: 22px;
+    }
+
+    section {
+        padding: 64px 0;
+    }
+
+    .card-pad {
+        padding: 24px;
+    }
+
+    .skills-grid,
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+
+    /* Di layar sempit, sidebar menutupi konten (overlay) alih-alih mendorongnya
+     — mencegah konten menjadi terlalu sempit di perangkat kecil. */
+    body.sidebar-open .page-shell {
+        transform: translateX(0);
     }
 }
 
 @media (max-width:600px) {
     .sidebar {
-        width: 86vw;
-        padding: 56px 28px 32px;
-    }
-
-    body.sidebar-open .sidebar-tab {
-        left: 86vw;
-    }
-
-    section {
-        padding: 76px 0;
-    }
-
-    main {
-        padding: 0 22px;
+        width: 88vw;
+        padding: 48px 28px 28px;
     }
 }
