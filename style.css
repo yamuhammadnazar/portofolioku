@@ -1458,3 +1458,103 @@ textarea.form-control {
         padding: 48px 28px 28px;
     }
 }
+
+/* ==========================================================================
+   GITHUB LIVE REPOSITORIES
+   ========================================================================== */
+.github-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.github-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 28px;
+    text-decoration: none;
+    height: 100%;
+}
+
+.github-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.github-card-top svg {
+    width: 24px;
+    height: 24px;
+    color: var(--ink-faint);
+    transition: color var(--dur-hover) var(--ease-fast);
+}
+
+.github-title {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    word-break: break-all;
+    margin-bottom: 8px;
+}
+
+.github-desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex-grow: 1;
+    /* Memastikan meta info selalu di bawah */
+}
+
+.github-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+}
+
+.github-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lang-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--gold);
+    /* Warna default */
+}
+
+/* Hover effect khusus GitHub card */
+.github-card:hover .github-card-top svg {
+    color: var(--navy);
+}
+
+.github-card:hover .github-title {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+.github-loading,
+.github-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-md);
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+    .github-grid {
+        grid-template-columns: 1fr;
+    }
+}
