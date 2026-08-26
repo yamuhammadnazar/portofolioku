@@ -361,8 +361,6 @@ section {
 
 .section-label {
     align-self: start;
-    position: sticky;
-    top: 110px;
 }
 
 .eyebrow {
@@ -618,13 +616,13 @@ section {
 
 .t-card {
     position: relative;
-    padding-left: 40px;
+    padding-left: 60px;
 }
 
 .t-card::before {
     content: '';
     position: absolute;
-    left: 36px;
+    left: 38px;
     top: 36px;
     bottom: 36px;
     width: 2px;
@@ -638,10 +636,10 @@ section {
 .t-card::after {
     content: '';
     position: absolute;
-    left: 32px;
+    left: 33px;
     top: 34px;
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
     background: var(--surface);
     border: 2px solid var(--line-strong);
