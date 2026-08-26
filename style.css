@@ -447,6 +447,30 @@ section {
     border-color: #fff;
 }
 
+.btn-experience {
+    background: var(--gold);
+    color: #fff;
+    border: 1px solid var(--gold);
+}
+
+.btn-experience:hover {
+    background: #8a6b2c;
+    border-color: #8a6b2c;
+    transform: translateY(-2px);
+}
+
+.btn-teal {
+    background: #3F6F6B;
+    color: #fff;
+    border: 1px solid #3F6F6B;
+}
+
+.btn-teal:hover {
+    background: #315956;
+    border-color: #315956;
+    transform: translateY(-2px);
+}
+
 /* ==========================================================================
    HERO
    ========================================================================== */

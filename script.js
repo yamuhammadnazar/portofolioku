@@ -111,3 +111,21 @@ document.addEventListener("keydown", (event) => {
     closeSidebar();
   }
 });
+
+// =========================================================
+// DOWNLOAD CV
+// =========================================================
+
+document.getElementById('downloadCV')?.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    const cvUrl = 'cv/CV-Ya-Muhammad-Nazar.pdf';
+
+    const link = document.createElement('a');
+    link.href = cvUrl;
+    link.download = 'CV-Ya-Muhammad-Nazar.pdf';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
