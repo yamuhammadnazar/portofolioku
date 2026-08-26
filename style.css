@@ -1,4 +1,3 @@
-/* Styling Tambahan untuk Efek Profesional */
 html {
     scroll-behavior: smooth;
 }
@@ -7,7 +6,6 @@ body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
