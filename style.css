@@ -138,7 +138,7 @@ body.sidebar-open .overlay {
     transition: transform var(--dur-shell) var(--ease);
     display: flex;
     flex-direction: column;
-    padding: 56px 40px 36px;
+    padding: 32px 24px 20px;
 }
 
 body.sidebar-open .sidebar {
@@ -146,7 +146,7 @@ body.sidebar-open .sidebar {
 }
 
 .sb-head {
-    margin-bottom: 52px;
+    margin-bottom: 24px;
 }
 
 .sb-mark {
@@ -158,22 +158,22 @@ body.sidebar-open .sidebar {
     border: 1px solid rgba(255, 255, 255, .2);
     padding: 4px 9px;
     border-radius: var(--radius-sm);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .sb-name {
     display: block;
     font-family: var(--font-display);
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 500;
     color: #fff;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.25;
 }
 
 .sb-role {
     display: block;
-    font-size: 13px;
+    font-size: 12.5px;
     color: rgba(255, 255, 255, .55);
     letter-spacing: .01em;
 }
@@ -182,19 +182,28 @@ body.sidebar-open .sidebar {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+
+    /* Menyembunyikan batang scroll */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sb-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .sb-nav li+li {
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 .sb-nav a {
     display: flex;
     align-items: baseline;
-    gap: 16px;
-    padding: 14px 12px;
+    gap: 14px;
+    padding: 10px 12px;
     border-radius: var(--radius-sm);
-    font-size: 15px;
+    font-size: 14px;
     color: rgba(255, 255, 255, .68);
     transition: background var(--dur-hover) var(--ease-fast), color var(--dur-hover) var(--ease-fast), padding-left var(--dur-hover) var(--ease-fast);
 }
@@ -224,12 +233,12 @@ body.sidebar-open .sidebar {
 }
 
 .sb-foot {
-    margin-top: 36px;
-    padding-top: 22px;
+    margin-top: 20px;
+    padding-top: 16px;
     border-top: 1px solid rgba(255, 255, 255, .14);
-    font-size: 12px;
+    font-size: 11.5px;
     color: rgba(255, 255, 255, .5);
-    line-height: 1.8;
+    line-height: 1.7;
 }
 
 .sb-dot {
@@ -345,6 +354,7 @@ main {
 
 section {
     padding: 96px 0;
+    scroll-margin-top: 40px;
 }
 
 .section-band {
@@ -1215,9 +1225,6 @@ footer {
         min-height: auto;
     }
 
-    /* .card-pad di atas mereset padding-left lewat shorthand, jadi jarak
-     garis-ke-teks pada timeline perlu ditegaskan ulang di sini supaya
-     tetap lega dan tidak menumpuk ke teks di layar sempit. */
     .t-card {
         padding-left: 48px;
     }
@@ -1230,8 +1237,6 @@ footer {
         left: 21px;
     }
 
-    /* Di layar sempit, sidebar menutupi konten (overlay) alih-alih mendorongnya
-     — mencegah konten menjadi terlalu sempit di perangkat kecil. */
     body.sidebar-open .page-shell {
         transform: translateX(0);
     }

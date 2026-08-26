@@ -3,8 +3,8 @@
    ========================================================================== */
 
 const sidebar = document.querySelector(".sidebar");
-const sidebarToggle = document.querySelector(".sidebar-toggle");
-const sidebarOverlay = document.querySelector(".sidebar-overlay");
+const sidebarToggle = document.querySelector(".sidebar-tab");
+const sidebarOverlay = document.querySelector(".overlay");
 
 function openSidebar() {
   sidebar?.classList.add("open");
