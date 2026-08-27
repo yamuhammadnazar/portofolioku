@@ -1,50 +1,4 @@
 /* ==========================================================================
-   DARK MODE TOGGLE
-   Tema awal sudah di-set inline di <head> (anti-flicker). Di sini kita
-   hanya menangani klik tombol dan menyimpan pilihan pengguna.
-   ========================================================================== */
-
-const themeToggle = document.getElementById("themeToggle");
-const rootEl = document.documentElement;
-
-function updateToggleLabel(theme) {
-  themeToggle?.setAttribute(
-    "aria-label",
-    theme === "dark" ? "Ganti ke tema terang" : "Ganti ke tema gelap",
-  );
-}
-
-// Dipanggil hanya saat pengguna benar-benar memilih (klik tombol),
-// supaya pilihan manual tidak tertimpa ulang oleh preferensi sistem.
-function setTheme(theme) {
-  rootEl.setAttribute("data-theme", theme);
-  localStorage.setItem("theme", theme);
-  updateToggleLabel(theme);
-}
-
-themeToggle?.addEventListener("click", () => {
-  const current =
-    rootEl.getAttribute("data-theme") === "dark" ? "dark" : "light";
-  setTheme(current === "dark" ? "light" : "dark");
-});
-
-// Set label tombol sesuai tema yang sudah di-apply lebih dulu di <head>,
-// tanpa menulis ke localStorage (bukan pilihan manual pengguna).
-updateToggleLabel(
-  rootEl.getAttribute("data-theme") === "dark" ? "dark" : "light",
-);
-
-// Ikuti perubahan preferensi sistem HANYA jika pengguna belum pernah
-// memilih tema secara manual (belum ada nilai tersimpan di localStorage)
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (e) => {
-    const hasManualChoice = localStorage.getItem("theme");
-    if (hasManualChoice) return;
-    rootEl.setAttribute("data-theme", e.matches ? "dark" : "light");
-  });
-
-/* ==========================================================================
    SIDEBAR TOGGLE
    ========================================================================== */
 
@@ -83,6 +37,56 @@ document.querySelectorAll(".sidebar a").forEach((link) => {
     closeSidebar();
   });
 });
+
+/* ==========================================================================
+   SCROLL REVEAL
+   Fade + slide-up saat elemen (section-label, kartu, dsb.) masuk viewport.
+   Progressive enhancement: kalau JS gagal load, class "no-js" pada <html>
+   tetap ada (lihat index.html) sehingga semua konten tetap terlihat normal.
+   ========================================================================== */
+
+document.documentElement.classList.remove("no-js");
+document.documentElement.classList.add("js");
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    });
+  },
+  {
+    root: null,
+    rootMargin: "0px 0px -10% 0px",
+    threshold: 0.12,
+  },
+);
+
+// Mendaftarkan satu elemen ke observer, aman dipanggil berkali-kali
+// (termasuk untuk elemen yang baru ditambahkan setelah fetch async).
+function observeReveal(el) {
+  if (!el || el.dataset.revealObserved) return;
+  el.dataset.revealObserved = "true";
+  revealObserver.observe(el);
+}
+
+// Elemen di dalam ".reveal-group" otomatis diberi class "reveal" + jeda
+// bertahap (stagger) sesuai urutan anak elemennya, supaya kartu-kartu
+// dalam satu grid muncul satu-satu, bukan serentak.
+function initReveal(root = document) {
+  root.querySelectorAll(".reveal-group").forEach((group) => {
+    Array.from(group.children).forEach((child, index) => {
+      child.classList.add("reveal");
+      child.style.transitionDelay = `${Math.min(index * 90, 360)}ms`;
+      observeReveal(child);
+    });
+  });
+
+  root.querySelectorAll(".reveal").forEach((el) => observeReveal(el));
+}
+
+initReveal();
 
 /* ==========================================================================
    SCROLL SPY
@@ -267,7 +271,7 @@ async function fetchGitHubRepos() {
     const repos = await response.json();
     githubGrid.innerHTML = ""; // Bersihkan loading state
 
-    repos.forEach((repo) => {
+    repos.forEach((repo, index) => {
       // Lewati jika repo tersebut adalah fork (opsional)
       if (repo.fork) return;
 
@@ -280,7 +284,7 @@ async function fetchGitHubRepos() {
         : "";
 
       const cardHTML = `
-        <a href="${repo.html_url}" target="_blank" rel="noopener" class="card github-card">
+        <a href="${repo.html_url}" target="_blank" rel="noopener" class="card github-card reveal" style="transition-delay:${Math.min(index * 90, 360)}ms">
           <div class="github-card-top">
             <h4 class="github-title">${repo.name}</h4>
             <!-- Ikon GitHub -->
@@ -302,6 +306,10 @@ async function fetchGitHubRepos() {
       `;
       githubGrid.innerHTML += cardHTML;
     });
+
+    // Kartu GitHub dimasukkan setelah observer utama berjalan (fetch async),
+    // jadi perlu didaftarkan ulang ke revealObserver di sini.
+    initReveal(githubGrid);
   } catch (error) {
     console.error(error);
     githubGrid.innerHTML = `
