@@ -1,4 +1,50 @@
 /* ==========================================================================
+   DARK MODE TOGGLE
+   Tema awal sudah di-set inline di <head> (anti-flicker). Di sini kita
+   hanya menangani klik tombol dan menyimpan pilihan pengguna.
+   ========================================================================== */
+
+const themeToggle = document.getElementById("themeToggle");
+const rootEl = document.documentElement;
+
+function updateToggleLabel(theme) {
+  themeToggle?.setAttribute(
+    "aria-label",
+    theme === "dark" ? "Ganti ke tema terang" : "Ganti ke tema gelap",
+  );
+}
+
+// Dipanggil hanya saat pengguna benar-benar memilih (klik tombol),
+// supaya pilihan manual tidak tertimpa ulang oleh preferensi sistem.
+function setTheme(theme) {
+  rootEl.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+  updateToggleLabel(theme);
+}
+
+themeToggle?.addEventListener("click", () => {
+  const current =
+    rootEl.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  setTheme(current === "dark" ? "light" : "dark");
+});
+
+// Set label tombol sesuai tema yang sudah di-apply lebih dulu di <head>,
+// tanpa menulis ke localStorage (bukan pilihan manual pengguna).
+updateToggleLabel(
+  rootEl.getAttribute("data-theme") === "dark" ? "dark" : "light",
+);
+
+// Ikuti perubahan preferensi sistem HANYA jika pengguna belum pernah
+// memilih tema secara manual (belum ada nilai tersimpan di localStorage)
+window
+  .matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", (e) => {
+    const hasManualChoice = localStorage.getItem("theme");
+    if (hasManualChoice) return;
+    rootEl.setAttribute("data-theme", e.matches ? "dark" : "light");
+  });
+
+/* ==========================================================================
    SIDEBAR TOGGLE
    ========================================================================== */
 
@@ -132,7 +178,7 @@ document
     document.body.removeChild(link);
   });
 
-  /* ==========================================================================
+/* ==========================================================================
    CONTACT FORM AJAX SUBMISSION (Formspree)
    ========================================================================== */
 const contactForm = document.getElementById("contactForm");
@@ -147,7 +193,7 @@ if (contactForm) {
     const originalBtnText = submitBtn.innerText;
     submitBtn.innerText = "Mengirim...";
     submitBtn.disabled = true;
-    
+
     // Reset status sebelumnya
     formStatus.className = "form-status";
     formStatus.innerText = "";
@@ -160,12 +206,13 @@ if (contactForm) {
         method: contactForm.method,
         body: data,
         headers: {
-          'Accept': 'application/json'
-        }
+          Accept: "application/json",
+        },
       });
 
       if (response.ok) {
-        formStatus.innerText = "Pesan berhasil terkirim! Terima kasih telah menghubungi saya.";
+        formStatus.innerText =
+          "Pesan berhasil terkirim! Terima kasih telah menghubungi saya.";
         formStatus.classList.add("success");
         formStatus.style.display = "block";
         contactForm.reset(); // Kosongkan form
@@ -212,17 +259,17 @@ async function fetchGitHubRepos() {
   try {
     // Mengambil repo yang paling terakhir diupdate (Maksimal 4 repo)
     const response = await fetch(
-      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=4`
+      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=4`,
     );
-    
+
     if (!response.ok) throw new Error("Gagal mengambil data dari GitHub");
-    
+
     const repos = await response.json();
     githubGrid.innerHTML = ""; // Bersihkan loading state
 
     repos.forEach((repo) => {
       // Lewati jika repo tersebut adalah fork (opsional)
-      if (repo.fork) return; 
+      if (repo.fork) return;
 
       const langColor = getLanguageColor(repo.language);
       const languageHTML = repo.language
@@ -255,7 +302,6 @@ async function fetchGitHubRepos() {
       `;
       githubGrid.innerHTML += cardHTML;
     });
-
   } catch (error) {
     console.error(error);
     githubGrid.innerHTML = `

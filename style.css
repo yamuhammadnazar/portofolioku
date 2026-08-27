@@ -37,6 +37,46 @@
     --dur-shell: .55s;
     --dur-fade: .4s;
     --dur-hover: .25s;
+
+    /* Transisi khusus untuk pergantian tema, dipisah dari token transisi
+       lain supaya tidak ikut ke-override oleh reduced-motion di elemen lain */
+    --dur-theme: .35s;
+}
+
+/* ==========================================================================
+   DARK THEME
+   Diaktifkan lewat atribut data-theme="dark" di elemen <html>.
+   Hanya token warna yang dioverride; radius, font, spacing tetap sama.
+   ========================================================================== */
+[data-theme="dark"] {
+    --bg: #12141A;
+    --bg-band: #181B23;
+    --surface: #1D2029;
+    --ink: #ECEDEF;
+    --ink-soft: #AEB2BC;
+    --ink-faint: #767B87;
+    --line: #2A2E38;
+    --line-strong: #383D4A;
+
+    --navy: #3A5A8A;
+    --navy-soft: #3a5a8a22;
+    --gold: #D2AC5E;
+    --gold-soft: #d2ac5e1f;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .28), 0 2px 10px -4px rgba(0, 0, 0, .35);
+    --shadow-md: 0 4px 14px -4px rgba(0, 0, 0, .4), 0 20px 40px -18px rgba(0, 0, 0, .55);
+}
+
+/* Elemen yang mengubah warna saat tema berganti diberi transisi halus */
+body,
+.card,
+.stat-card,
+.sidebar,
+.form-status,
+.btn {
+    transition: background-color var(--dur-theme) var(--ease-fast),
+        color var(--dur-theme) var(--ease-fast),
+        border-color var(--dur-theme) var(--ease-fast);
 }
 
 * {
@@ -338,6 +378,91 @@ body.sidebar-open .tab-line::before {
 body.sidebar-open .tab-line::after {
     top: 4px;
     transform: rotate(-45deg);
+}
+
+/* ==========================================================================
+   THEME TOGGLE
+   Tombol fixed di kanan atas untuk beralih light/dark. Mengikuti pergeseran
+   .page-shell seperti .sidebar-tab, karena posisinya fixed di dalam elemen
+   yang di-transform.
+   ========================================================================== */
+.theme-toggle {
+    position: fixed;
+    top: 32px;
+    right: var(--gutter);
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: color var(--dur-hover) var(--ease-fast),
+        box-shadow var(--dur-hover) var(--ease-fast),
+        border-color var(--dur-hover) var(--ease-fast),
+        background-color var(--dur-theme) var(--ease-fast);
+}
+
+.theme-toggle:hover {
+    color: var(--ink);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--navy);
+    outline-offset: 2px;
+}
+
+.theme-toggle svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* Ikon matahari & bulan ditumpuk lalu di-crossfade + rotate sesuai tema,
+   supaya transisinya terasa mulus, bukan sekadar tukar ikon secara instan. */
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    position: absolute;
+    transition: opacity var(--dur-theme) var(--ease-fast),
+        transform var(--dur-theme) var(--ease-fast);
+}
+
+.theme-toggle .icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(.6);
+}
+
+.theme-toggle .icon-sun {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(.6);
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+@media (max-width: 600px) {
+    .theme-toggle {
+        top: 20px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .theme-toggle svg {
+        width: 17px;
+        height: 17px;
+    }
 }
 
 /* ==========================================================================
@@ -1368,6 +1493,18 @@ textarea.form-control {
     background: #ffebee;
     color: #c62828;
     border: 1px solid #ffcdd2;
+}
+
+[data-theme="dark"] .form-status.success {
+    background: #1c3324;
+    color: #7ed896;
+    border-color: #2a4a35;
+}
+
+[data-theme="dark"] .form-status.error {
+    background: #3a1f22;
+    color: #f29aa0;
+    border-color: #522a2e;
 }
 
 /* Responsive penyesuaian */
