@@ -103,8 +103,30 @@ sidebarOverlay?.addEventListener("click", closeSidebar);
 document.querySelectorAll(".sidebar a").forEach((link) => {
   link.addEventListener("click", () => {
     closeSidebar();
+    flashTargetSection(link.getAttribute("href"));
   });
 });
+
+// Memberi kilasan warna halus pada section tujuan setelah smooth-scroll,
+// supaya user yakin sudah "mendarat" di section yang tepat.
+function flashTargetSection(hash) {
+  if (!hash || !hash.startsWith("#")) return;
+
+  const target = document.querySelector(hash);
+  if (!target) return;
+
+  // Reset dulu (jaga-jaga kalau diklik berulang cepat) lalu paksa reflow
+  // supaya animasinya bisa restart dari awal.
+  target.classList.remove("section-flash");
+  void target.offsetWidth;
+  target.classList.add("section-flash");
+
+  target.addEventListener(
+    "animationend",
+    () => target.classList.remove("section-flash"),
+    { once: true },
+  );
+}
 
 /* ==========================================================================
    SCROLL REVEAL
@@ -145,16 +167,74 @@ function observeReveal(el) {
 function initReveal(root = document) {
   root.querySelectorAll(".reveal-group").forEach((group) => {
     Array.from(group.children).forEach((child, index) => {
-      child.classList.add("reveal");
+      // Kartu dalam grid pakai varian "reveal-scale" (fade + naik + scale)
+      // supaya terasa berbeda dari elemen tunggal (section-label, dsb.)
+      // yang memakai slide polos ".reveal".
+      child.classList.add("reveal-scale");
       child.style.transitionDelay = `${Math.min(index * 90, 360)}ms`;
       observeReveal(child);
     });
   });
 
-  root.querySelectorAll(".reveal").forEach((el) => observeReveal(el));
+  root
+    .querySelectorAll(".reveal, .reveal-scale")
+    .forEach((el) => observeReveal(el));
 }
 
 initReveal();
+
+/* ==========================================================================
+   COUNT-UP ANGKA STATISTIK
+   Menganimasikan angka (mis. IPK) dari 0 ke nilai aslinya saat elemen
+   ".count-num" pertama kali masuk viewport. Menghormati preferensi
+   reduced-motion dengan langsung menampilkan nilai akhir.
+   ========================================================================== */
+
+function animateCountUp(el) {
+  const target = parseFloat(el.dataset.target || "0");
+  const decimals = parseInt(el.dataset.decimals || "0", 10);
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (prefersReducedMotion || !Number.isFinite(target)) {
+    el.textContent = target.toFixed(decimals);
+    return;
+  }
+
+  const duration = 1100;
+  const start = performance.now();
+
+  function tick(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    el.textContent = (target * eased).toFixed(decimals);
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+function initCountUp() {
+  const counters = document.querySelectorAll(".count-num");
+  if (!counters.length) return;
+
+  const countObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        animateCountUp(entry.target);
+        countObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.4 },
+  );
+
+  counters.forEach((el) => countObserver.observe(el));
+}
+
+initCountUp();
 
 /* ==========================================================================
    SCROLL SPY
@@ -352,7 +432,7 @@ async function fetchGitHubRepos() {
         : "";
 
       const cardHTML = `
-        <a href="${repo.html_url}" target="_blank" rel="noopener" class="card github-card reveal" style="transition-delay:${Math.min(index * 90, 360)}ms">
+        <a href="${repo.html_url}" target="_blank" rel="noopener" class="card github-card reveal-scale" style="transition-delay:${Math.min(index * 90, 360)}ms">
           <div class="github-card-top">
             <h4 class="github-title">${repo.name}</h4>
             <!-- Ikon GitHub -->

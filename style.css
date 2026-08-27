@@ -72,6 +72,20 @@ html[data-theme="dark"] {
     padding: 0;
 }
 
+/* Teks yang tetap terbaca screen reader tapi disembunyikan secara visual
+   (dipakai saat konten visualnya sudah cukup mewakili, mis. skeleton loading) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -92,7 +106,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .reveal {
+
+    .reveal,
+    .reveal-scale {
         opacity: 1 !important;
         transform: none !important;
     }
@@ -134,7 +150,7 @@ svg {
     width: 0%;
     background: linear-gradient(90deg, var(--gold), var(--navy));
     z-index: 500;
-    transition: width .12s var(--ease-fast);
+    transition: width .18s linear;
     display: none;
 }
 
@@ -377,21 +393,34 @@ body.sidebar-open .page-shell {
 }
 
 .theme-toggle svg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
     width: 19px;
     height: 19px;
     stroke: currentColor;
+    transition: opacity var(--dur-hover) var(--ease-fast),
+        transform var(--dur-hover) var(--ease-fast);
+}
+
+.theme-toggle .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 .theme-toggle .icon-moon {
-    display: none;
+    opacity: 0;
+    transform: rotate(-90deg) scale(.5);
 }
 
 html[data-theme="dark"] .theme-toggle .icon-sun {
-    display: none;
+    opacity: 0;
+    transform: rotate(90deg) scale(.5);
 }
 
 html[data-theme="dark"] .theme-toggle .icon-moon {
-    display: block;
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 .tab-line {
@@ -515,8 +544,8 @@ section {
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--shadow-md), 0 0 0 3px var(--navy-soft);
 }
 
 .btn-ghost {
@@ -1645,7 +1674,6 @@ html[data-theme="dark"] .form-status.error {
     text-decoration: underline;
 }
 
-.github-loading,
 .github-error {
     grid-column: 1 / -1;
     text-align: center;
@@ -1656,10 +1684,66 @@ html[data-theme="dark"] .form-status.error {
     border-radius: var(--radius-md);
 }
 
+/* Skeleton shimmer: placeholder kartu yang "berkedip" selagi data GitHub
+   ditarik lewat API, menggantikan teks statis "Memuat data...". */
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -400px 0;
+    }
+
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+.github-skeleton {
+    height: 190px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background-color: var(--surface);
+    background-image: linear-gradient(90deg, var(--line) 25%, var(--line-strong) 37%, var(--line) 63%);
+    background-size: 400px 100%;
+    animation: skeletonShimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .github-skeleton {
+        animation: none;
+        background-image: none;
+        background-color: var(--line);
+    }
+}
+
 /* Responsive */
 @media (max-width: 760px) {
     .github-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   SECTION FLASH
+   Kilasan warna halus pada section tujuan saat link sidebar diklik,
+   supaya user yakin sudah "mendarat" di section yang benar setelah
+   smooth-scroll (lihat script.js, listener klik ".sidebar a").
+   ========================================================================== */
+@keyframes sectionFlash {
+    0% {
+        background-color: var(--gold-soft);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+.section-flash {
+    animation: sectionFlash .9s var(--ease-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .section-flash {
+        animation: none;
     }
 }
 
@@ -1682,7 +1766,34 @@ html[data-theme="dark"] .form-status.error {
     transform: translateY(0);
 }
 
-.no-js .reveal {
+/* Judul/label section masuk dengan geser tipis dari kiri, membedakannya
+   dari konten di sebelahnya (yang naik dari bawah) supaya scroll terasa
+   lebih berlapis, bukan semua elemen bergerak identik. */
+.section-label.reveal {
+    transform: translateX(-24px);
+}
+
+.section-label.reveal.is-visible {
+    transform: translateX(0);
+}
+
+/* Varian untuk kartu dalam grid (".reveal-group" di initReveal()):
+   fade + naik + sedikit scale, terasa lebih "muncul" dibanding sekadar
+   slide, cocok untuk kumpulan kartu yang muncul beruntun (stagger). */
+.reveal-scale {
+    opacity: 0;
+    transform: translateY(20px) scale(.96);
+    transition: opacity var(--dur-fade) var(--ease),
+        transform var(--dur-fade) var(--ease);
+}
+
+.reveal-scale.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.no-js .reveal,
+.no-js .reveal-scale {
     opacity: 1;
     transform: none;
     transition: none;

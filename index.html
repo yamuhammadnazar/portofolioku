@@ -102,7 +102,7 @@
             </span>
             <div>
               <span class="stat-k">IPK</span>
-              <span class="stat-v accent">3.75 / 4.00</span>
+              <span class="stat-v accent"><span class="count-num" data-target="3.75" data-decimals="2">0.00</span> / 4.00</span>
             </div>
           </div>
         </div>
@@ -435,10 +435,12 @@
               
               <!-- Grid tempat JS akan memasukkan kartu repositori -->
               <div class="github-grid" id="githubGrid">
-                <div class="github-loading">
-                   <!-- Animasi loading sederhana -->
-                   <p>Memuat data dari GitHub...</p>
-                </div>
+                <!-- Skeleton shimmer selagi data GitHub ditarik lewat API -->
+                <div class="github-skeleton" aria-hidden="true"></div>
+                <div class="github-skeleton" aria-hidden="true"></div>
+                <div class="github-skeleton" aria-hidden="true"></div>
+                <div class="github-skeleton" aria-hidden="true"></div>
+                <p class="sr-only">Memuat repositori dari GitHub...</p>
               </div>
             </div>
       </section>
