@@ -1,4 +1,72 @@
 /* ==========================================================================
+   DARK MODE TOGGLE
+   Tema sudah diterapkan lebih awal lewat inline script di <head> (agar
+   tidak ada flash). Blok ini hanya menangani interaksi tombol, penyimpanan
+   preferensi, dan mengikuti perubahan preferensi sistem operasi selama
+   user belum pernah memilih tema secara manual.
+   ========================================================================== */
+
+const themeToggle = document.getElementById("themeToggle");
+const THEME_STORAGE_KEY = "theme";
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  themeToggle?.setAttribute(
+    "aria-pressed",
+    theme === "dark" ? "true" : "false",
+  );
+}
+
+function getStoredTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    return stored === "light" || stored === "dark" ? stored : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function getSystemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+// Sinkronkan aria-pressed tombol dengan tema aktual yang sudah di-set
+// oleh inline script di <head> (menghindari duplikasi logic penentuan tema).
+applyTheme(
+  document.documentElement.getAttribute("data-theme") ||
+    getStoredTheme() ||
+    getSystemTheme(),
+);
+
+themeToggle?.addEventListener("click", () => {
+  const current =
+    document.documentElement.getAttribute("data-theme") === "dark"
+      ? "dark"
+      : "light";
+  const next = current === "dark" ? "light" : "dark";
+  applyTheme(next);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+  } catch (e) {
+    /* localStorage tidak tersedia (mis. mode privat) — tema tetap berubah
+       untuk sesi ini, hanya tidak tersimpan permanen */
+  }
+});
+
+// Kalau user belum pernah memilih tema secara manual, ikuti perubahan
+// preferensi sistem operasi secara live (mis. jam malam otomatis di OS).
+if (window.matchMedia) {
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (event) => {
+      if (getStoredTheme()) return;
+      applyTheme(event.matches ? "dark" : "light");
+    });
+}
+
+/* ==========================================================================
    SIDEBAR TOGGLE
    ========================================================================== */
 

@@ -1,6 +1,21 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="no-js">
 <head>
+<script>
+  // Diterapkan sesegera mungkin (sebelum CSS/paint) supaya tidak ada
+  // "kedipan" dari tema terang ke gelap saat halaman baru dimuat.
+  (function () {
+    try {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark"
+        ? stored
+        : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {
+      /* localStorage/matchMedia tidak tersedia — biarkan tema default (terang) */
+    }
+  })();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ya' Muhammad Nazar — Informatics Engineer &amp; Web Developer</title>
@@ -9,32 +24,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script>
-  /* Set tema sebelum CSS/body dirender, agar tidak ada "kedipan"
-     warna yang salah sesaat sebelum script.js dieksekusi. */
-  (function () {
-    var saved = localStorage.getItem("theme");
-    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var theme = saved || (prefersDark ? "dark" : "light");
-    document.documentElement.setAttribute("data-theme", theme);
-  })();
-</script>
 </head>
 <body>
 
   <!-- Progress bar bacaan -->
   <div class="progress-bar" id="progressBar"></div>
-
-  <!-- Tombol beralih tema terang/gelap -->
-  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Ganti tema terang/gelap">
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <circle cx="12" cy="12" r="4.2"/>
-      <path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/>
-    </svg>
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/>
-    </svg>
-  </button>
 
   <!-- Overlay penggelap saat sidebar terbuka -->
   <div class="overlay" id="overlay"></div>
@@ -70,11 +64,16 @@
       <span class="tab-text">Menu</span>
     </button>
 
+    <button class="theme-toggle" id="themeToggle" aria-label="Ganti mode terang/gelap" title="Ganti mode terang/gelap">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.9 4.9l1.85 1.85M17.25 17.25l1.85 1.85M2.5 12h2.6M18.9 12h2.6M4.9 19.1l1.85-1.85M17.25 6.75l1.85-1.85"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5a8.5 8.5 0 1 1-9-11 7 7 0 0 0 9 11Z"/></svg>
+    </button>
+
     <main>
 
       <!-- HERO -->
       <section class="hero" id="hero">
-        <div class="hero-left">
+        <div class="hero-left reveal">
           <p class="eyebrow">Portofolio Profesional — Lulusan S1 Teknik Informatika</p>
           <h1 class="hero-name">Ya' Muhammad<br>Nazar, S.kom</h1>
           <p class="hero-role">Informatics Engineering Graduate yang aktif dalam pengembangan web, perancangan UI, serta memiliki pengalaman magang dan organisasi. Terbiasa membangun sistem fungsional yang aplikatif dari perencanaan hingga deployment</p>
@@ -87,7 +86,7 @@
           </div>
         </div>
 
-        <div class="hero-right">
+        <div class="hero-right reveal" style="transition-delay:120ms">
           <div class="stat-card">
             <span class="stat-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>
@@ -112,12 +111,12 @@
       <!-- 01 TENTANG -->
       <section id="tentang" class="section-band">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">01 — Profil</p>
             <h2 class="title">Tentang Saya</h2>
           </div>
           <div class="section-content">
-            <div class="card card-pad">
+            <div class="card card-pad reveal">
               <p class="lead">
                 Lulusan S1 Teknik Informatika Universitas Muhammadiyah Pontianak dengan IPK 3.75. Menggabungkan keahlian teknis dalam pengembangan perangkat lunak (web development) 
                 dan analitika sistem dengan kepekaan desain antarmuka (UI/UX) serta pengalaman organisasi yang kuat. Berpengalaman menangani project mulai dari riset 
@@ -136,12 +135,12 @@
       <!-- 02 PENDIDIKAN -->
       <section id="pendidikan">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">02 — Akademik</p>
             <h2 class="title">Riwayat Pendidikan</h2>
           </div>
           <div class="section-content">
-            <div class="card-list">
+            <div class="card-list reveal-group">
               <article class="card card-pad t-card">
                 <div class="t-card-head">
                   <h3>Strata 1 (S1) — Teknik Informatika</h3>
@@ -166,7 +165,7 @@
       <!-- 03 PEKERJAAN -->
       <section id="pekerjaan" class="section-band">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">03 — Pengalaman</p>
             <h2 class="title">Pekerjaan &amp; Magang</h2>
           </div>
@@ -174,7 +173,7 @@
           <div class="section-content">
 
             <!-- FEATURED EXPERIENCE -->
-            <article class="experience-featured card">
+            <article class="experience-featured card reveal">
               <div class="experience-featured-top">
                 <span class="experience-number">01</span>
                 <span class="badge badge-accent">Nov 2025 — Mei 2026</span>
@@ -202,7 +201,7 @@
             </article>
 
             <!-- OTHER EXPERIENCES -->
-            <div class="experience-grid">
+            <div class="experience-grid reveal-group">
 
               <article class="experience-card card" data-number="02">
                 <div class="experience-card-top">
@@ -285,13 +284,13 @@
       <!-- 04 ORGANISASI -->
       <section id="organisasi">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">04 — Kepemimpinan</p>
             <h2 class="title">Riwayat Organisasi</h2>
           </div>
           <div class="section-content">
             <h3 class="sub-title">Perguruan Tinggi</h3>
-            <div class="card-grid">
+            <div class="card-grid reveal-group">
               <article class="card card-pad org-card">
                 <span class="badge">Okt 2023 — Sep 2024</span>
                 <h3>Sekretaris Himpunan</h3>
@@ -317,7 +316,7 @@
             </div>
 
             <h3 class="sub-title">Sekolah Menengah Atas (SMA)</h3>
-            <div class="card-grid">
+            <div class="card-grid reveal-group">
               <article class="card card-pad org-card">
                 <span class="badge">SMAN 1 Ngabang</span>
                 <h3>Ketua Unit Umum &amp; Ketua Diklat</h3>
@@ -347,12 +346,12 @@
       <!-- 05 KEAHLIAN -->
       <section id="keahlian" class="section-band">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">05 — Kapabilitas</p>
             <h2 class="title">Keahlian &amp; Teknologi</h2>
           </div>
           <div class="section-content">
-            <div class="skills-grid">
+            <div class="skills-grid reveal-group">
               <div class="card card-pad">
                 <h3 class="sub-title">Hard Skills</h3>
                 <div class="pill-row">
@@ -390,12 +389,12 @@
       <!-- 06 PROYEK -->
       <section id="proyek">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">06 — Portofolio</p>
             <h2 class="title">Proyek Pilihan</h2>
           </div>
           <div class="section-content">
-            <div class="project-grid">
+            <div class="project-grid reveal-group">
               <article class="card project-card">
                 <div class="project-cover project-cover-a">
                   <span class="project-num">01</span>
@@ -429,7 +428,7 @@
         </div>
            <!-- WADAH GITHUB LIVE REPOSITORIES -->
             <div style="margin-top: 64px;">
-              <div class="section-label" style="margin-bottom: 24px;">
+              <div class="section-label reveal" style="margin-bottom: 24px;">
                 <h3 class="sub-title">Repositori GitHub Terkini</h3>
                 <p class="lead" style="font-size: 15px; margin-bottom: 0;">Otomatis ditarik dari GitHub API untuk menampilkan aktivitas coding terbaru.</p>
               </div>
@@ -447,14 +446,14 @@
       <!-- 07 KONTAK -->
       <section id="kontak" class="section-band">
         <div class="section-grid">
-          <div class="section-label">
+          <div class="section-label reveal">
             <p class="eyebrow">07 — Kolaborasi</p>
             <h2 class="title">Hubungi Saya</h2>
           </div>
           <div class="section-content">
             
             <!-- Wrapper baru untuk membagi 2 kolom: Info (Kiri) & Form (Kanan) -->
-            <div class="card card-pad contact-wrapper">
+            <div class="card card-pad contact-wrapper reveal">
               
               <!-- KIRI: Info Kontak -->
               <div class="contact-info">
